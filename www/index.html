@@ -1,0 +1,374 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+  <script src="components/loader.js"></script>
+  <script src="lib/onsenui/js/onsenui.min.js"></script>
+
+  <link rel="stylesheet" href="components/loader.css">
+  <link rel="stylesheet" href="lib/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="lib/onsenui/css/onsen-css-components.css">
+  <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+
+  <script>
+    ons.ready(function() {
+      console.log("Onsen UI is ready!");
+    });
+
+    window.fn = {};
+    window.fn.open = function() {
+      var menu = document.getElementById('menu');
+      menu.open();
+    };
+    window.fn.load = function(page) {
+      var content = document.getElementById('content');
+      var menu = document.getElementById('menu');
+      content
+        .load(page)
+        .then(menu.close.bind(menu));
+    };
+
+
+    //routingについてのscript
+    rendererOptions = {
+        draggable: true,
+        preserveViewport:false
+    };
+    var directionsDisplay;
+    var directionsService;
+    
+    function initialize(){
+         var zoom = 7;
+         var mapTypeId = google.maps.MapTypeId.ROADMAP
+         var opts = {
+             zoom: zoom,
+         mapTypeId: mapTypeId
+        };
+        directionsDisplay = 
+          new google.maps.DirectionsRenderer(rendererOptions);
+        directionsService = 
+          new google.maps.DirectionsService();
+        map = new google.maps.Map
+             (document.getElementById("map"),opts);
+            directionsDisplay.setMap(map);
+         google.maps.event.addListener(directionsDisplay,'directions_changed', function(){});
+    calcRoute();
+    };
+
+function calcRoute() {
+     var request = {
+     origin: "釧路",
+     destination: "札幌",
+     travelMode: google.maps.DirectionsTravelMode.DRIVING,
+     unitSystem: google.maps.DirectionsUnitSystem.METRIC,
+     optimizeWaypoints: true,
+     avoidHighways: false,
+     avoidTolls: false
+    };
+    
+
+    var map;
+    directionsService.route(request,function(response,status){
+        if (status == google.maps.DirectionsStatus.OK){
+            directionsDisplay.setDirections(response);}
+        });
+}
+
+
+    //graph_data.htmlについてのscript
+        var H_data = {
+            labels: [ "0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h","23h"],
+            datasets: [
+                {
+                label: '時間別事故件数',
+                backgroundColor: "rgba(255,99,132,0.3)",
+                hoverBackgroundColor: "rgba(255,99,132,0.7)",
+                data: [177, 122, 108, 134, 168, 146, 87, 75, 80, 67, 66, 61, 45, 49, 46, 63, 274, 858, 949, 889, 530, 361, 318, 213],
+                }
+            ]
+        };
+        //「月別データ」
+        var M_data = {
+            labels: ["１月", "２月", "３月", "４月", "５月", "６月", "７月","８月","９月","１０月","１１月","１２月"],
+            datasets: [
+                {
+                label: '月別事故件数',
+                backgroundColor: "rgba(255,165,0,0.3)",
+                hoverBackgroundColor: "rgba(255,165,0,0.7)",
+                data: [283, 149, 205, 456, 338, 310, 341, 351, 522, 1381, 1032, 518],
+                }
+            ]
+        };
+        //「オプション設定」
+        var options = {
+            title: {    
+            display: true,
+            text: 'h26-28エゾシカロードキルデータ'
+            }
+        };
+   
+        //ボタンの動作確認
+        function graph_M(){
+            var canvas = document.getElementById('stage');
+            //canvas.clearRect(0, 0, canvas.width, canvas.height);
+            var chart = new Chart(canvas, {
+                type: 'bar',  //グラフの種類
+                data: H_data,  //表示するデータ
+                options: options  //オプション設定
+            });
+        }
+        
+        function graph_Co(){
+            var canvas = document.getElementById('stage');
+            //canvas.clearRect(0, 0, canvas.width, canvas.height);
+            var chart = new Chart(canvas, {
+                type: 'bar',  //グラフの種類
+                data: M_data,  //表示するデータ
+                options: options  //オプション設定
+            });
+        }
+
+
+
+    //roadkill_data_Gmap.htmlについてのscript
+      //GoogleMapの組み込み1/13
+      function initMap() {
+        //__マップの表示を簡略化11/27__
+        var kushiro = {lat: 42.985, lng: 144.382};
+        var mapOptions = {
+        zoom: 7,
+        center: kushiro
+        }
+        var map = new google.maps.Map(document.getElementById('map'),mapOptions);
+        //__11/27__
+        //__KMLLayer追加11/27__ __事故数の多い順に表示
+        //最多事故市町村RedLayer　100件～
+        //325
+        var Red_Layer = new google.maps.KmlLayer({
+            url:'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/RedLayer/RedLayer.kml',
+            map:map
+        });
+        //次点事故市町村 75件～100件まで　OrangeLayer
+        var Orange_Layer = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/OrangeLayer/OrangeLayer.kml',
+            map:map
+        });       
+        //50-74 YellowLayer
+        var Yellow_Layer = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/YellowLayer/YellowLayer.kml',
+            map:map
+        });
+        //25-49 YellowGreenLayer
+        var Yellowish_Green_Layer_One = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/YellowGreenLayer/Yellowgreen_One.kml',
+            map:map
+        });
+        var Yelllo_Green_Layer_Tw = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/YellowGreenLayer/YellowGreen_Tw.kml',
+            map:map
+        });
+        //0-24
+        var Green_Layer_One = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/GreenLayer/Green_Layer_One.kml',
+            map:map
+        });
+        var Green_Layer_Tw = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/GreenLayer/Green_Layer_Tw.kml',
+            map:map
+        });
+        var Green_Layer_Th = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/GreenLayer/Green_Layer_Th.kml',
+            map:map
+        });
+        var Green_Layer_Fo = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/GreenLayer/Green_Layer_Fo.kml',
+            map:map
+        });
+        var Green_Layer_Fi = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/GreenLayer/Green_Layer_Fi.kml',
+            map:map
+        });         
+        var Green_Layer_Si = new google.maps.KmlLayer({
+            url: 'https://raw.githubusercontent.com/Avenue2115/roadkill/master/www/kml/GreenLayer/Green_Lyer_Si.kml',
+            map:map
+        });
+        /*マップの仕様でできていないのかの確認→　出来んじゃねぇか！
+        var ctaLayer = new google.maps.KmlLayer({
+            url: 'http://googlemaps.github.io/js-v2-samples/ggeoxml/cta.kml',
+            map: map
+        });*/
+        //kushiro_Layer.setMap(map);
+        //tomakomai_Layer.setMap(map);
+        //__11/27__
+        /*__12/3現状、マーカーは不要__
+        var marker = new google.maps.Marker({
+          position: kushiro,
+          map: map
+        });
+        __12/3__*/
+    }
+
+  </script>
+</head>
+<body>
+  <ons-splitter>
+    <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+      <ons-page>
+        <ons-list>
+          <ons-list-item onclick="fn.load('home.html')" tappable>
+            Home
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('routing.html')" tappable>
+            routing
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('graph_data.html')" tappable>
+            graph_data
+          </ons-list-item>
+          <ons-list-item onclick="fn.load('roadkill_data_Gmap.html')" tappable>
+            roadkill_data_Gmap
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-splitter-side>
+    <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+  </ons-splitter>
+
+  <ons-template id="home.html">
+    <ons-page>
+      <ons-toolbar>
+        <div class="left">
+          <ons-toolbar-button onclick="fn.open()">
+            <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
+          </ons-toolbar-button>
+        </div>
+        <div class="center">
+          Yukind
+        </div>
+      </ons-toolbar>
+      <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
+        Yuk:アイヌ語における鹿の意
+        <br />
+        kind:優しさ,親切
+        <br />
+        I think you are kind.
+      </p>
+    </ons-page>
+  </ons-template>
+
+  <ons-template id="routing.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="fn.open()">
+          <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        routing
+      </div>
+    </ons-toolbar>
+    <div id="map"></div>
+    <div class="text-road">
+        <input id="origin" type="text" class="text-input" placeholder="出発地を入力してください" style="display: block; width 100%">
+    </div>
+    <div class="text-road">
+        <input id="destination" type="text" class="text-input" placeholder="到着地を入力してください" style="display: block; width 100%"/>
+    </div>
+    <ons-row align="bottom">
+        <ons-col width="5%"></ons-col>
+        <ons-col align="left" >
+            <ons-button id="submit" modifier="large outline">Routing</ons-button>
+        </ons-col>
+        <ons-col width="5%"></ons-col>
+        <ons-col align="center">
+            <ons-button id="rou_map" modifier="large outline" onclick="initialize()">地図表示</ons-button>
+        </ons-col>
+        <ons-col width="5%"></ons-col>
+    </ons-row>
+  </ons-page>
+  </ons-template>
+
+
+
+  <ons-template id="graph_data.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="fn.open()">
+          <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        graph_data
+      </div>
+    </ons-toolbar>
+    <div id="map">
+        <canvas id="stage" height="100vh" width="90vw"></canvas>
+    </div>
+    <br />
+        <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
+            時間別　　　　　　月別
+        </p>
+    <div>
+        <ons-row align="bottom">
+            <ons-col width="5%"></ons-col>
+            <ons-col>
+                <ons-button modifier="large outline" id="M_Graph" onclick="graph_M()">Carry on!</ons-button>
+            </ons-col>
+            <ons-col width="5%"></ons-col>
+            <ons-col>
+                <ons-button modifier="large outline" id="Ca_Graph" onclick="graph_Co()">Carry on2!</ons-button>
+            </ons-col>
+            <ons-col width="5%"></ons-col>
+        </ons-row>
+    </div>
+  </ons-page>
+  </ons-template>
+
+
+
+  <ons-template id="roadkill_data_Gmap.html">
+  <ons-page>
+    <ons-toolbar>
+      <div class="left">
+        <ons-toolbar-button onclick="fn.open()">
+          <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
+        </ons-toolbar-button>
+      </div>
+      <div class="center">
+        roadkill_data_Gmap
+      </div>
+    </ons-toolbar>
+    <div>
+        <div id="map"></div>
+        <br />
+        <ons-row>
+            <ons-col id="red">100~</ons-col>
+            <ons-col id="orange">75~</ons-col>
+            <ons-col id="yerrow">50~</ons-col>
+            <ons-col id="ye_green">25~</ons-col>
+            <ons-col id="green">0~</ons-col>
+        </ons-row>
+        <br />
+        <ons-row>
+            <ons-col width="5%"></ons-col>
+            <ons-col>
+                <ons-button onclick="initMap()" modifier="large outline">
+                    地図表示
+                </ons-button>
+            </ons-col>
+            <ons-col width="5%"></ons-col>
+        </ons-row>
+    </div>
+  </ons-page>
+  </ons-template>
+  
+</body>
+   <script 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkPJ_PQTYnotBZfqPGgN4dimDPAHHR7zY&v=3&libraries=geometry">
+    </script>
+</html>
