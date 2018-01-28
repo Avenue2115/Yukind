@@ -3,6 +3,10 @@
     height: 450px;
     width: 100%;
     }
+.graph{
+    height: 70%;
+    width: 100%;
+}
 .btn_center{
   position: absolute;
   top: 95%;

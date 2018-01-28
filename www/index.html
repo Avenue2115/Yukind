@@ -48,10 +48,8 @@
              zoom: zoom,
          mapTypeId: mapTypeId
         };
-        directionsDisplay = 
-          new google.maps.DirectionsRenderer(rendererOptions);
-        directionsService = 
-          new google.maps.DirectionsService();
+        directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+        directionsService = new google.maps.DirectionsService();
         map = new google.maps.Map
              (document.getElementById("map"),opts);
             directionsDisplay.setMap(map);
@@ -61,8 +59,9 @@
 
 function calcRoute() {
      var request = {
-     origin: "釧路",
-     destination: "札幌",
+         //始点と終点を可変にする1/27 ok
+     origin: document.getElementById('start').value,
+     destination: document.getElementById('end').value,
      travelMode: google.maps.DirectionsTravelMode.DRIVING,
      unitSystem: google.maps.DirectionsUnitSystem.METRIC,
      optimizeWaypoints: true,
@@ -73,10 +72,14 @@ function calcRoute() {
 
     var map;
     directionsService.route(request,function(response,status){
+        console.log(status);//ステータスの内容を表示 1/27
         if (status == google.maps.DirectionsStatus.OK){
             directionsDisplay.setDirections(response);}
         });
 }
+
+
+
 
 
     //graph_data.htmlについてのscript
@@ -113,8 +116,11 @@ function calcRoute() {
    
         //ボタンの動作確認
         function graph_M(){
-            var canvas = document.getElementById('stage');
-            //canvas.clearRect(0, 0, canvas.width, canvas.height);
+            var canvas = document.getElementById('stage_m');
+            document.getElementById('graph_m').style.display = 'block';
+            document.getElementById('graph_m').classList.add("graph");
+            document.getElementById('graph_co').style.display = 'none';
+            document.getElementById('graph_co').classList.remove("graph");
             var chart = new Chart(canvas, {
                 type: 'bar',  //グラフの種類
                 data: H_data,  //表示するデータ
@@ -123,8 +129,11 @@ function calcRoute() {
         }
         
         function graph_Co(){
-            var canvas = document.getElementById('stage');
-            //canvas.clearRect(0, 0, canvas.width, canvas.height);
+            var canvas = document.getElementById('stage_co');
+            document.getElementById('graph_co').style.display = 'block';
+            document.getElementById('graph_co').classList.add("graph");
+            document.getElementById('graph_m').style.display = 'none';
+            document.getElementById('graph_m').classList.remove("graph");
             var chart = new Chart(canvas, {
                 type: 'bar',  //グラフの種類
                 data: M_data,  //表示するデータ
@@ -273,10 +282,10 @@ function calcRoute() {
     </ons-toolbar>
     <div id="map"></div>
     <div class="text-road">
-        <input id="origin" type="text" class="text-input" placeholder="出発地を入力してください" style="display: block; width 100%">
+        <input id="start" type="text" class="text-input" placeholder="出発地を入力してください" style="display: block; width 100%">
     </div>
     <div class="text-road">
-        <input id="destination" type="text" class="text-input" placeholder="到着地を入力してください" style="display: block; width 100%"/>
+        <input id="end" type="text" class="text-input" placeholder="到着地を入力してください" style="display: block; width 100%"/>
     </div>
     <ons-row align="bottom">
         <ons-col width="5%"></ons-col>
@@ -306,8 +315,11 @@ function calcRoute() {
         graph_data
       </div>
     </ons-toolbar>
-    <div id="map">
-        <canvas id="stage" height="100vh" width="90vw"></canvas>
+    <div id="graph_m">
+        <canvas id="stage_m" height="90vh" width="70vw"></canvas>
+    </div>
+    <div id="graph_co">
+        <canvas id="stage_co" height="90vh" width="70vw"></canvas>
     </div>
     <br />
         <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
