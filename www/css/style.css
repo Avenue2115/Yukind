@@ -1,6 +1,9 @@
 /**/
+.bg-color{
+    background-color: #f2e7d3;
+}
 #map {
-    height: 450px;
+    height: 70vh;
     width: 100%;
     }
 .graph{
@@ -35,4 +38,17 @@
 }
 #green{
     background-color: #09F014;
+}
+
+#graph-area{
+    background-color: #f2e7d3;
+    height: 80vh;
+}
+.tool-bar{
+    background-color: #f2e7d3;
+    color: #6f7f42;
+}
+.all-page{
+    background-color: #6f7f42;
+    height: 90vh;
 }

@@ -223,22 +223,25 @@ function calcRoute() {
 
   </script>
 </head>
-<body>
+<body class="bg-color">
   <ons-splitter>
-    <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+    <ons-splitter-side id="menu" side="left" width="220px" collapse swipeable="false">
       <ons-page>
-        <ons-list>
+        <ons-list  class="tool-bar">
           <ons-list-item onclick="fn.load('home.html')" tappable>
-            Home
+            Yukind
           </ons-list-item>
           <ons-list-item onclick="fn.load('routing.html')" tappable>
-            routing
+          <ons-icon icon="ion-android-car"></ons-icon>
+            ルーティング
           </ons-list-item>
-          <ons-list-item onclick="fn.load('graph_data.html')" tappable>
-            graph_data
+          <ons-list-item onclick="fn.load('graph_data.html')" onclick="graph_M()" tapple>
+          <ons-icon icon="ion-stats-bars"></ons-icon>
+            ロードキルグラフ
           </ons-list-item>
           <ons-list-item onclick="fn.load('roadkill_data_Gmap.html')" tappable>
-            roadkill_data_Gmap
+          <ons-icon icon="ion-map"></ons-icon>
+            ロードキルマップ
           </ons-list-item>
         </ons-list>
       </ons-page>
@@ -248,38 +251,41 @@ function calcRoute() {
 
   <ons-template id="home.html">
     <ons-page>
-      <ons-toolbar>
+      <ons-toolbar class="tool-bar">
         <div class="left">
           <ons-toolbar-button onclick="fn.open()">
             <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
           </ons-toolbar-button>
         </div>
-        <div class="center">
+        <div class="center" class="">
           Yukind
         </div>
       </ons-toolbar>
-      <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
+      <div class="all-page">
+      <p style="text-align: center; opacity: 0.6; padding-top: 20px; color:#f2e7d3;">
         Yuk:アイヌ語における鹿の意
         <br />
         kind:優しさ,親切
         <br />
         I think you are kind.
       </p>
+      </div>
     </ons-page>
   </ons-template>
 
   <ons-template id="routing.html">
   <ons-page>
-    <ons-toolbar>
+    <ons-toolbar class="tool-bar">
       <div class="left">
         <ons-toolbar-button onclick="fn.open()">
           <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
         </ons-toolbar-button>
       </div>
       <div class="center">
-        routing
+        ルーティング
       </div>
     </ons-toolbar>
+    <div class="all-page">
     <div id="map"></div>
     <div class="text-road">
         <input id="start" type="text" class="text-input" placeholder="出発地を入力してください" style="display: block; width 100%">
@@ -287,56 +293,58 @@ function calcRoute() {
     <div class="text-road">
         <input id="end" type="text" class="text-input" placeholder="到着地を入力してください" style="display: block; width 100%"/>
     </div>
-    <ons-row align="bottom">
+    <ons-row>
         <ons-col width="5%"></ons-col>
         <ons-col align="left" >
-            <ons-button id="submit" modifier="large outline">Routing</ons-button>
+            <ons-button id="submit" modifier="large">Routing</ons-button>
         </ons-col>
         <ons-col width="5%"></ons-col>
         <ons-col align="center">
-            <ons-button id="rou_map" modifier="large outline" onclick="initialize()">地図表示</ons-button>
+            <ons-button id="rou_map" modifier="large" onclick="initialize()">地図表示</ons-button>
         </ons-col>
         <ons-col width="5%"></ons-col>
     </ons-row>
+    </div>
   </ons-page>
   </ons-template>
 
 
 
-  <ons-template id="graph_data.html">
+  <ons-template id="graph_data.html" onload>
   <ons-page>
-    <ons-toolbar>
+    <ons-toolbar class="tool-bar">
       <div class="left">
         <ons-toolbar-button onclick="fn.open()">
           <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
         </ons-toolbar-button>
       </div>
       <div class="center">
-        graph_data
+        ロードキルグラフ
       </div>
     </ons-toolbar>
+    <div class="all-page">
+    <div id="graph-area">
     <div id="graph_m">
         <canvas id="stage_m" height="90vh" width="70vw"></canvas>
     </div>
     <div id="graph_co">
         <canvas id="stage_co" height="90vh" width="70vw"></canvas>
     </div>
-    <br />
-        <p style="text-align: center; opacity: 0.6; padding-top: 20px;">
-            時間別　　　　　　月別
-        </p>
+    </div>
+    <br/>
     <div>
-        <ons-row align="bottom">
+        <ons-row>
             <ons-col width="5%"></ons-col>
-            <ons-col>
-                <ons-button modifier="large outline" id="M_Graph" onclick="graph_M()">Carry on!</ons-button>
+            <ons-col >
+                <ons-button modifier="large" id="M_Graph" onclick="graph_M()">時間別</ons-button>
             </ons-col>
             <ons-col width="5%"></ons-col>
             <ons-col>
-                <ons-button modifier="large outline" id="Ca_Graph" onclick="graph_Co()">Carry on2!</ons-button>
+                <ons-button modifier="large" id="Ca_Graph" onclick="graph_Co()">月別</ons-button>
             </ons-col>
             <ons-col width="5%"></ons-col>
         </ons-row>
+    </div>
     </div>
   </ons-page>
   </ons-template>
@@ -345,17 +353,17 @@ function calcRoute() {
 
   <ons-template id="roadkill_data_Gmap.html">
   <ons-page>
-    <ons-toolbar>
+    <ons-toolbar class="tool-bar">
       <div class="left">
         <ons-toolbar-button onclick="fn.open()">
           <ons-icon icon="ion-navicon, material:md-menu"></ons-icon>
         </ons-toolbar-button>
       </div>
       <div class="center">
-        roadkill_data_Gmap
+        ロードキルマップ
       </div>
     </ons-toolbar>
-    <div>
+    <div class="all-page">
         <div id="map"></div>
         <br />
         <ons-row>
@@ -369,7 +377,7 @@ function calcRoute() {
         <ons-row>
             <ons-col width="5%"></ons-col>
             <ons-col>
-                <ons-button onclick="initMap()" modifier="large outline">
+                <ons-button onclick="initMap()" modifier="large">
                     地図表示
                 </ons-button>
             </ons-col>
