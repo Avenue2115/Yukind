@@ -35,13 +35,24 @@
 
     //routingについてのscript
     rendererOptions = {
-        draggable: true,
+        draggable: false,
         preserveViewport:false
     };
     var directionsDisplay;
     var directionsService;
     
     function initialize(){
+        //処理をワンセットに
+        if(time >= 18 && time <= 20){
+            alert("エゾシカとの事故は、18時～20時のあいだに全体の3割が起きています。お気をつけください。");
+        }else{
+            alert("エゾシカは群れで行動します。一匹いれば２、３匹。後に続いて飛び出すでしょう。お気をつけください。");
+        }
+        if(month >= 10 && month <= 11){
+            alert("10月,11月に事故の40.9%が起こります。エゾシカはこの時期に生息地を変えるためです。お気をつけください。")
+        }else{
+            alert("現在の道は過去には森や林、湿原と言った自然でした。野生動物にとっては彼らの庭のようなものです。自由に飛び回りますので、お気をつけください。")
+        }
          var zoom = 7;
          var mapTypeId = google.maps.MapTypeId.ROADMAP
          var opts = {
@@ -66,7 +77,7 @@ function calcRoute() {
      unitSystem: google.maps.DirectionsUnitSystem.METRIC,
      optimizeWaypoints: true,
      avoidHighways: false,
-     avoidTolls: false
+     avoidTolls: true
     };
     
 
@@ -77,9 +88,27 @@ function calcRoute() {
             directionsDisplay.setDirections(response);}
         });
 }
-
-
-
+    //日付けや年月に関する処理の前準備
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var time = date.getHours();
+    //正しい数値が取得できているか確認
+    console.log(year + "/" + month + "/" + day + "/" + time);
+    //functionとしてひとまとめにする
+    /* 毎度アラートがあると面倒なのでとりあえずコメントアウト
+    if(time >= 18 && time <= 20){
+        alert("エゾシカとの事故は、18時～20時のあいだに全体の3割が起きています。お気をつけください。");
+    }else{
+        alert("エゾシカは群れで行動します。一匹いれば２、３匹。後に続いて飛び出すでしょう。お気をつけください。");
+    }
+    if(month >= 10 && month <= 11){
+        alert("10月,11月に事故の40.9%が起こります。エゾシカはこの時期に生息地を変えるためです。お気をつけください。")
+    }else{
+        alert("現在の道は過去には森や林、湿原と言った自然でした。野生動物にとっては彼らの庭のようなものです。自由に飛び回りますので、お気をつけください。")
+    }
+    */
 
 
     //graph_data.htmlについてのscript
@@ -88,8 +117,8 @@ function calcRoute() {
             datasets: [
                 {
                 label: '時間別事故件数',
-                backgroundColor: "rgba(255,99,132,0.3)",
-                hoverBackgroundColor: "rgba(255,99,132,0.7)",
+                backgroundColor: "rgba(255,99,132,0.7)",
+                hoverBackgroundColor: "rgba(255,99,132,0.3)",
                 data: [177, 122, 108, 134, 168, 146, 87, 75, 80, 67, 66, 61, 45, 49, 46, 63, 274, 858, 949, 889, 530, 361, 318, 213],
                 }
             ]
@@ -100,8 +129,8 @@ function calcRoute() {
             datasets: [
                 {
                 label: '月別事故件数',
-                backgroundColor: "rgba(255,165,0,0.3)",
-                hoverBackgroundColor: "rgba(255,165,0,0.7)",
+                backgroundColor: "rgba(255,165,0,0.7)",
+                hoverBackgroundColor: "rgba(255,165,0,0.3)",
                 data: [283, 149, 205, 456, 338, 310, 341, 351, 522, 1381, 1032, 518],
                 }
             ]
@@ -288,10 +317,32 @@ function calcRoute() {
     <div class="all-page">
     <div id="map"></div>
     <div class="text-road">
-        <input id="start" type="text" class="text-input" placeholder="出発地を入力してください" style="display: block; width 100%">
+        <!--<input id="start" type="text" class="text-input" placeholder="出発地を入力してください" style="display: block; width 100%">-->
+        <select id="start">
+            <option value = "札幌">札幌</option>
+            <option value = "室蘭">室蘭</option>
+            <option value = "函館">函館</option>
+            <option value = "帯広">帯広</option>
+            <option value = "網走">網走</option>
+            <option value = "釧路">釧路</option>
+            <option value = "根室">根室</option>
+            <option value = "旭川">旭川</option>
+            <option value = "稚内">稚内</option>
+        </select>
     </div>
     <div class="text-road">
-        <input id="end" type="text" class="text-input" placeholder="到着地を入力してください" style="display: block; width 100%"/>
+        <!--<input id="end" type="text" class="text-input" placeholder="到着地を入力してください" style="display: block; width 100%"/>-->
+        <select id="end">
+            <option value = "室蘭">室蘭</option>
+            <option value = "函館">函館</option>
+            <option value = "帯広">帯広</option>
+            <option value = "網走">網走</option>
+            <option value = "釧路">釧路</option>
+            <option value = "根室">根室</option>
+            <option value = "旭川">旭川</option>
+            <option value = "稚内">稚内</option>
+            <option value = "札幌">札幌</option>
+        </select>
     </div>
     <ons-row>
         <ons-col width="5%"></ons-col>
@@ -366,6 +417,11 @@ function calcRoute() {
     <div class="all-page">
         <div id="map"></div>
         <br />
+        <div>
+            <p style="text-align: center; opacity: 0.6; color: #f2e7d3;">
+                過去３カ年の事故件数
+            </p>
+        </div>
         <ons-row>
             <ons-col id="red">100~</ons-col>
             <ons-col id="orange">75~</ons-col>

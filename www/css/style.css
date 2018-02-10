@@ -3,7 +3,7 @@
     background-color: #f2e7d3;
 }
 #map {
-    height: 70vh;
+    height: 65vh;
     width: 100%;
     }
 .graph{
@@ -47,8 +47,13 @@
 .tool-bar{
     background-color: #f2e7d3;
     color: #6f7f42;
+    font-size: 90%;
 }
 .all-page{
     background-color: #6f7f42;
     height: 90vh;
 }
+#map-text{
+    height: 10vh;
+}
+
